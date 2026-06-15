@@ -51,12 +51,12 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
               int fila = index ~/ 3;
               int columna = index % 3;
 
-              double x = columna * (tamanoPieza + separacion);
-              double y = fila * (tamanoPieza + separacion);
-
-              return Positioned(
-                left: x,
-                top: y,
+              return AnimatedPositioned(
+                key: ValueKey(pieza.id),
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeOutCubic,
+                left: obtenerX(index),
+                top: obtenerY(index),
                 child: GestureDetector(
                   onTap: () {
                     mover(index);
