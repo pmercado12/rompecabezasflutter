@@ -42,7 +42,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     tablero = List.of(objetivo);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      mezclar(3);
+      mezclar(10);
       iniciarTimer();
     });
   }
@@ -131,7 +131,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
                 const SizedBox(width: 10),
 
                 ElevatedButton.icon(
-                  onPressed: mostrarAyuda,
+                  onPressed: resolverAutomaticamente,
                   icon: const Icon(Icons.help_outline),
                   label: const Text('Ayuda'),
                 ),
@@ -155,7 +155,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     setState(() {
       generarObjetivo();
       tablero = List.of(objetivo);
-      mezclar(2);
+      mezclar(10);
     });
     iniciarTimer();
   }
@@ -460,6 +460,46 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     }
 
     return camino.reversed.toList();
+  }
+
+  int obtenerMovimiento(List<int> actual, List<int> siguiente) {
+    for (int i = 0; i < actual.length; i++) {
+      if (actual[i] != 0 && actual[i] != siguiente[i]) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  void ayudaAutomatica() {
+    final solucion = resolverAStar(estadoActual(), estadoObjetivo());
+
+    if (solucion.length < 2) return;
+
+    final siguienteEstado = solucion[1];
+
+    final indice = obtenerMovimiento(estadoActual(), siguienteEstado);
+
+    if (indice != -1) {
+      mover(indice);
+    }
+  }
+
+  void resolverAutomaticamente() async {
+    final solucion = resolverAStar(estadoActual(), estadoObjetivo());
+
+    for (int paso = 1; paso < solucion.length; paso++) {
+      await Future.delayed(const Duration(milliseconds: 400));
+
+      if (!mounted) return;
+
+      final indice = obtenerMovimiento(estadoActual(), solucion[paso]);
+
+      if (indice != -1) {
+        mover(indice);
+      }
+    }
   }
 }
 
