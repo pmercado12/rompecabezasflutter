@@ -133,7 +133,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
                 ElevatedButton.icon(
                   onPressed: resolverAutomaticamente,
                   icon: const Icon(Icons.help_outline),
-                  label: const Text('Ayuda'),
+                  label: const Text('Ayuda A*'),
                 ),
               ],
             ),
@@ -266,8 +266,8 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: const Text('🎉 ¡Ganaste!'),
-          content: const Text('Has completado correctamente el puzzle.'),
+          title: const Text('¡Ganaste!'),
+          content: const Text('Has completado el rompecabezas!'),
           actions: [
             TextButton(
               onPressed: () {
