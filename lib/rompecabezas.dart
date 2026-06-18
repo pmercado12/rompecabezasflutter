@@ -2,21 +2,71 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
 
-class CuboRubikGesto extends StatefulWidget {
-  const CuboRubikGesto({super.key});
+class Rompecabezas extends StatefulWidget {
+  const Rompecabezas({super.key});
 
   @override
-  State<CuboRubikGesto> createState() => _CuboRubikGestoState();
+  State<Rompecabezas> createState() => _RompecabezasState();
 }
 
-class _CuboRubikGestoState extends State<CuboRubikGesto> {
+class _RompecabezasState extends State<Rompecabezas> {
   static const double tamanoPieza = 80.0;
   static const double separacion = 5.0;
   Timer? timer;
   int segundos = 0;
   bool juegoTerminado = false;
+  int nivel = 2;
+  int nroBase = 1;
 
-  final List<Pieza> piezasBase = const [
+  final List<Pieza> piezasBase1 = const [
+    Pieza(id: 1, color: Color(0xFF264653)), // azul petróleo
+    Pieza(id: 2, color: Color(0xFF2A9D8F)), // verde turquesa
+    Pieza(id: 3, color: Color(0xFFE9C46A)), // dorado suave
+    Pieza(id: 4, color: Color(0xFFF4A261)), // arena
+    Pieza(id: 5, color: Color(0xFFE76F51)), // coral
+    Pieza(id: 6, color: Color(0xFF6D597A)), // violeta grisáceo
+    Pieza(id: 7, color: Color(0xFF355070)), // azul oscuro
+    Pieza(id: 8, color: Color(0xFFB56576)), // rosa viejo
+    Pieza(id: 0, color: Colors.white, esComodin: true),
+  ];
+
+  final List<Pieza> piezasBase2 = const [
+    Pieza(id: 1, color: Color(0xFF1B263B)),
+    Pieza(id: 2, color: Color(0xFF415A77)),
+    Pieza(id: 3, color: Color(0xFF778DA9)),
+    Pieza(id: 4, color: Color(0xFF9A8C98)),
+    Pieza(id: 5, color: Color(0xFFC9ADA7)),
+    Pieza(id: 6, color: Color(0xFFD4A373)),
+    Pieza(id: 7, color: Color(0xFF606C38)),
+    Pieza(id: 8, color: Color(0xFFBC6C25)),
+    Pieza(id: 0, color: Colors.white, esComodin: true),
+  ];
+
+  final List<Pieza> piezasBase3 = const [
+    Pieza(id: 1, color: Color(0xFF1D3557)),
+    Pieza(id: 2, color: Color(0xFF457B9D)),
+    Pieza(id: 3, color: Color(0xFFA8DADC)),
+    Pieza(id: 4, color: Color(0xFFF1FAEE)),
+    Pieza(id: 5, color: Color(0xFFFFCDB2)),
+    Pieza(id: 6, color: Color(0xFFE5989B)),
+    Pieza(id: 7, color: Color(0xFFB5838D)),
+    Pieza(id: 8, color: Color(0xFF6D6875)),
+    Pieza(id: 0, color: Colors.white, esComodin: true),
+  ];
+
+  final List<Pieza> piezasBase4 = const [
+    Pieza(id: 1, color: Color(0xFF0F172A)), // negro azulado
+    Pieza(id: 2, color: Color(0xFF1E293B)),
+    Pieza(id: 3, color: Color(0xFF334155)),
+    Pieza(id: 4, color: Color(0xFF475569)),
+    Pieza(id: 5, color: Color(0xFF64748B)),
+    Pieza(id: 6, color: Color(0xFF94A3B8)),
+    Pieza(id: 7, color: Color(0xFFCBD5E1)),
+    Pieza(id: 8, color: Color(0xFFE2E8F0)),
+    Pieza(id: 0, color: Color(0xFFFFFFFF), esComodin: true),
+  ];
+
+  final List<Pieza> piezasBase5 = const [
     Pieza(id: 1, color: Colors.purple),
     Pieza(id: 2, color: Colors.blue),
     Pieza(id: 3, color: Colors.orange),
@@ -42,7 +92,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     tablero = List.of(objetivo);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      mezclar(10);
+      mezclar();
       iniciarTimer();
     });
   }
@@ -56,8 +106,11 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade900,
-      appBar: AppBar(title: const Text('Rompecabezas Pedro')),
+      backgroundColor: Color(0xFF1E1E24),
+      appBar: AppBar(
+        title: const Text('Rompecabezas Pedro'),
+        centerTitle: true,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +155,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
 
                   return AnimatedPositioned(
                     key: ValueKey(pieza.id),
-                    duration: const Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 600),
                     curve: Curves.easeOutCubic,
                     left: obtenerX(index),
                     top: obtenerY(index),
@@ -121,11 +174,21 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {
-                    nuevoJuego();
-                  },
-                  icon: const Icon(Icons.refresh),
+                  onPressed: nuevoJuego,
+                  icon: const Icon(Icons.refresh_rounded),
                   label: const Text('Nuevo'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2A9D8F),
+                    foregroundColor: Colors.white,
+                    elevation: 6,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
                 ),
 
                 const SizedBox(width: 10),
@@ -143,8 +206,24 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     );
   }
 
+  dynamic obtenerPiezasBase() {
+    final int base = nroBase % 5;
+
+    if (base == 1) {
+      return piezasBase1;
+    } else if (base == 2) {
+      return piezasBase2;
+    } else if (base == 3) {
+      return piezasBase3;
+    } else if (base == 4) {
+      return piezasBase4;
+    } else {
+      return piezasBase5;
+    }
+  }
+
   void generarObjetivo() {
-    objetivo = List.of(piezasBase);
+    objetivo = List.of(obtenerPiezasBase());
 
     do {
       objetivo.shuffle();
@@ -153,9 +232,10 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
 
   void nuevoJuego() {
     setState(() {
+      nroBase++;
       generarObjetivo();
       tablero = List.of(objetivo);
-      mezclar(10);
+      mezclar();
     });
     iniciarTimer();
   }
@@ -230,13 +310,13 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     }
   }
 
-  void mezclar([int pasos = 100]) {
+  void mezclar() {
     final random = Random();
 
     do {
       tablero = List.of(objetivo);
 
-      for (int i = 0; i < pasos; i++) {
+      for (int i = 0; i < nivel; i++) {
         int vacio = indiceVacio;
 
         List<int> vecinos = [];
@@ -266,12 +346,17 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: const Text('¡Ganaste!'),
-          content: const Text('Has completado el rompecabezas!'),
+          title: Center(child: Text('¡Ganaste!')),
+          content: Text(
+            'Completaste el rompecabezas en un tiempo de ${formatearTiempo(segundos)}',
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                setState(() {
+                  nivel = nivel + 1;
+                });
                 nuevoJuego();
               },
               child: const Text('Jugar otra vez'),
@@ -490,7 +575,7 @@ class _CuboRubikGestoState extends State<CuboRubikGesto> {
     final solucion = resolverAStar(estadoActual(), estadoObjetivo());
 
     for (int paso = 1; paso < solucion.length; paso++) {
-      await Future.delayed(const Duration(milliseconds: 400));
+      await Future.delayed(const Duration(milliseconds: 600));
 
       if (!mounted) return;
 

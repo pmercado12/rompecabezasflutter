@@ -1,8 +1,4 @@
-import 'package:estados/align.dart';
-import 'package:estados/anipos.dart';
-import 'package:estados/home.dart';
-import 'package:estados/rompe.dart';
-import 'package:estados/rompe_gesto.dart';
+import 'package:rompecabezas/rompecabezas.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,8 +12,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CuboRubikGesto(),
+      home: Rompecabezas(),
     );
-    //return const MaterialApp(home: Rompe());
   }
 }
