@@ -1,4 +1,4 @@
-import 'package:rompecabezas/rompecabezas.dart';
+import 'package:rompecabezas/screens/menu.screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Rompecabezas(),
+      home: MenuScreen(),
     );
   }
 }
